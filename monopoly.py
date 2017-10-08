@@ -4,8 +4,10 @@ import json
 
 players = {}
 
+
 class Player:
     players = {}
+
     def __init__(self, name, money=0):
         self.name = name or input('Player name: ')
         self.money = money
@@ -16,7 +18,7 @@ class Player:
 
     def __add__(self, amount):
         newPlayer = Player(self.name, self.money)
-        newPlayer.money += amount
+        newPlayer.money = round(newPlayer.money + amount, 2)
         while newPlayer.money < 0:
             print('{} now has ${}M'.format(newPlayer.name, newPlayer.money))
             amount = input('Add mortgage amount: ')
@@ -48,11 +50,13 @@ if __name__ == '__main__':
             data = [player.__dict__ for player in players.values()]
             f.write(json.dumps(data))
         os.system('cls')
-        for player in sorted(players.values(), key=lambda p: (p.name != 'freeparking', p.name)):
+        for player in sorted(players.values(),
+                             key=lambda p: (p.name != 'freeparking',
+                                            p.name)):
             print(player)
         print('Options:')
-        print('[a]dd [p]layer')
-        print('[p]ay <payer name> <payee name> <amount>')
+        print('[a]dd [p]layer [name [money]]')
+        print('[p]ay [payer name] <payee name> <amount>')
         print('[q]uit')
         command = input('>')
         action, *args = command.split()
@@ -96,4 +100,3 @@ if __name__ == '__main__':
                 players[payee] += amount
             continue
         print('invalid command "{}"'.format(command))
-    print
